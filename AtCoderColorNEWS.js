@@ -35,7 +35,7 @@
 
         //前の色よりも今の色のほうが高い場合通知。
         if (preRate < nowRate) {
-            string += username + 'さんのレートが' + color[nowRate] + '色に変わりました！<br>';
+            string += `${E(username)}さんのレートが${color[nowRate]}色に変わりました！<br>`;
         }
     });
 
