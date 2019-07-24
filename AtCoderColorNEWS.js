@@ -32,8 +32,8 @@
         if (!joinFlag) continue;
 
         //Rateを色に変換する
-        preRate = Math.floor(preRate / 400);
-        nowRate = Math.floor(nowRate / 400);
+        preRate = Math.max(8, Math.floor(preRate / 400));
+        nowRate = Math.max(8, Math.floor(nowRate / 400));
 
         //前の色よりも今の色のほうが高い場合通知。
         if (preRate < nowRate) {
