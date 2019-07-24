@@ -13,9 +13,9 @@
 
     //レートを色に変換するリスト
     let color = ['灰', '茶', '緑', '水', '青', '黄', '橙', '赤', '自由'];
-
+    
     let string = ""; //通知用string
-    for (let i = 0; i < favList.length; i++) {
+    favList.forEach(username => {
         //favList[i]:=お気に入りの人のusername
 
         let preRate = 1000;
@@ -36,9 +36,10 @@
 
         //前の色よりも今の色のほうが高い場合通知。
         if (preRate < nowRate) {
-            string += favList[i] + 'さんのレートが' + color[nowRate] + '色に変わりました！<br>';
+            string += username + 'さんのレートが' + color[nowRate] + '色に変わりました！<br>';
         }
-    }
+    });
 
     notie.alert(3, string, 20); //20秒後、またはクリックで消える
 })();
+    
