@@ -59,4 +59,3 @@ function getLatestContestScreenName() {
 async function getContestResultData(contestScreenName) {
     return await $.ajax(`https://atcoder.jp/contests/${contestScreenName}/results/json`);
 }
-
