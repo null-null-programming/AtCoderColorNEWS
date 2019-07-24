@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @author       nullnull
-// @match        https://atcoder.jp/?lang=ja
+// @match        https://atcoder.jp
 // @require      https://cdn.rawgit.com/jaredreich/notie.js/a9e4afbeea979c0e6ee50aaf5cb4ee80e65d225d/notie.js
 // ==/UserScript==
 
