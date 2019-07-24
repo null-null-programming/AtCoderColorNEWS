@@ -16,38 +16,47 @@
 
     //直近のコンテスト
     const latestContestScreenName = getLatestContestScreenName();
+    //直近コンテストの結果一覧
+    const latestContestResult = await getContestResultData(latestContestScreenName);
+
+    //直近コンテストの結果一覧を辞書型に変換
+    let contestResultDic = {};
+    latestContestResult.forEach(res => contestResultDic[res.UserScreenName] = res);
 
     let string = ""; //通知用string
-    favList.forEach(async username => {
-        const ratedHistoryData = (await getHistoryData(username)).filter(x => x.IsRated);
-        if (ratedHistoryData.length === 0) return;
+    //favlistのそれぞれの要素からstringを返すようにして、それをjoin
+    string = favList.map(username => {
+        //個人の結果
+        const result = contestResultDic[username];
 
-        const latestHistory = ratedHistoryData.pop();
-        console.log(latestHistory);
-        if (latestHistory.ContestScreenName.split('.')[0] !== latestContestScreenName) return;
+        //個人の結果がない場合だめ
+        if (!result) return "";
 
-        let preRate = latestHistory.OldRating;
-        let nowRate = latestHistory.NewRating;
+        //Rateを取得し、色に変換する
+        const preRate = getColorIndex(result.OldRating);
+        const nowRate = getColorIndex(result.NewRating);
 
-        //Rateを色に変換する
-        preRate = Math.min(8, Math.floor(preRate / 400));
-        nowRate = Math.min(8, Math.floor(nowRate / 400));
+        //前の色よりも今の色のほうが高くない場合だめ
+        if (preRate >= nowRate) return "";
 
-        //前の色よりも今の色のほうが高い場合通知。
-        if (preRate < nowRate) {
-            string += `${E(username)}さんのレートが${color[nowRate]}色に変わりました！<br>`;
-        }
-    });
+        //繋げる文字列を返す
+        return `${E(username)}さんのレートが${color[nowRate]}色に変わりました！<br>`;
+    }).join("");
 
     notie.alert(3, string, 20); //20秒後、またはクリックで消える
 })();
+
+//Rateを色に変換する
+function getColorIndex(rate){
+    return Math.min(8, Math.floor(rate / 400));
+}
 
 function getLatestContestScreenName() {
     //TODO:URLのabc123みたいな奴をとってくる
     return "agc036";
 }
 
-async function getHistoryData(userScreenName) {
-    return await $.ajax(`https://atcoder.jp/users/${userScreenName}/history/json`)
+async function getContestResultData(contestScreenName) {
+    return await $.ajax(`https://atcoder.jp/contests/${contestScreenName}/results/json`);
 }
 
