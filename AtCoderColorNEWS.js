@@ -9,14 +9,13 @@
 
 (function () {
     //お気に入りリストを取得
-    let favList = localStorage.fav;
-    favList = favList.split('"');
+    let favList = JSON.parse(localStorage.fav);
 
     //レートを色に変換するリスト
     let color = ['灰', '茶', '緑', '水', '青', '黄', '橙', '赤', '自由'];
 
     let string = ""; //通知用string
-    for (let i = 1; i < favList.length; i += 2) {
+    for (let i = 0; i < favList.length; i++) {
         //favList[i]:=お気に入りの人のusername
 
         let preRate = 1000;
