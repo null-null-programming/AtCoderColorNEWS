@@ -3,7 +3,7 @@
 // @namespace    https://github.com/null-null-programming
 // @version      0.1
 // @author       null_null
-// @match        https://atcoder.jp/*
+// @match        https://atcoder.jp
 // @require      https://cdn.rawgit.com/jaredreich/notie.js/a9e4afbeea979c0e6ee50aaf5cb4ee80e65d225d/notie.js
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
