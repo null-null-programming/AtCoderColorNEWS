@@ -9,15 +9,15 @@
 // ==/UserScript==
 
 (async function () {
-    //既に通知したかどうかをcookieで判定する。flagがtrueのときのみ通知する。
-    let flag = true;
+    //既に通知したかどうかをcookieで判定する。imformedFlagがtrueのときのみ通知する。
+    let imformedFlag = true;
 
     //cookieが存在するか？ 存在しない場合は今回が初使用なので通知する。
     if (document.cookie.indexOf("preContest=") >= 0) {
         //cookie_name:preContestを取得する
-        let cook = document.cookie.split(';');
+        let cookieName = document.cookie.split(';');
 
-        cook.forEach(function (value) {
+        cookieName.forEach(function (value) {
             //cookie名と値に分ける
             let cookie_content = value.split('=');
 
@@ -26,7 +26,7 @@
                 let cookieContestName = cookie_content[1].split(',');
 
                 if (cookieContestName[0] === getLatestContestScreenName()) {
-                    flag = false;
+                    imformedFlag = false;
                     return; //通知済み
                 }
 
@@ -34,7 +34,7 @@
         })
     }
 
-    if (!flag) return;
+    if (imformedFlag === false) return;
 
     //お気に入りリストを取得
     let favList = JSON.parse(localStorage.fav);
