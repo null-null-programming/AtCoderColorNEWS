@@ -9,6 +9,29 @@
 // ==/UserScript==
 
 (async function () {
+    //既に通知したかどうかをcookieで判定する。
+
+    //cookieが存在するか？ 存在しない場合は今回が初使用なので通知する。
+    if (document.cookie.indexOf("preContest=") >= 0) {
+        //cookie_name:preContestを取得する
+        let cook = document.cookie.split(';');
+        
+        cook.forEach(function (value) {
+            //cookie名と値に分ける
+            let cookie_content = value.split('=');
+            
+            if (cookie_content[0] === 'preContest') {
+                //保存されているクッキーの名前を取得
+                let cookieContestName = cookie_content[1].split(',');
+
+                if (cookieContestName === getLatestContestScreenName()) {
+                    return;//通知済み
+                }
+
+            }
+        })
+    }
+
     //お気に入りリストを取得
     let favList = JSON.parse(localStorage.fav);
 
@@ -47,6 +70,9 @@
     if (string.length > 0) {
         notie.alert(3, string, 20); //20秒後、またはクリックで消える
     }
+
+    //cookieを１ヶ月保存する。今回のコンテスト名で上書きする。
+    document.cookie = 'preContest=' + contestScreenName + ',max-age=60*60*24*30';
 })();
 
 //Rateを色に変換する
