@@ -34,8 +34,6 @@
         })
     }
 
-    console.log(flag);
-
     if (!flag) return;
 
     //お気に入りリストを取得
