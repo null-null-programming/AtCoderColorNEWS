@@ -57,6 +57,7 @@
 
 function imformedFlag() {
     //cookieが存在するか？ 存在しない場合は今回が初使用なので通知する。
+    let res = true;
     if (document.cookie.indexOf("preContest=") >= 0) {
         //cookie_name:preContestを取得する
         let cookieName = document.cookie.split(';');
@@ -70,13 +71,13 @@ function imformedFlag() {
                 let cookieContestName = cookie_content[1].split(',');
                 //cookieに保存されているコンテスト名と直近のコンテスト名が同じ場合は通知済み
                 if (cookieContestName[0] === getLatestContestScreenName()) {
-                    imformedFlag = false;
-                    return; //通知済み
+                    res = false;
+                    return;
                 }
-
             }
         })
     }
+    return res;
 }
 
 //Rateを色に変換する
