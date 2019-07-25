@@ -5,6 +5,7 @@
 // @author       nullnull
 // @match        https://atcoder.jp
 // @require      https://cdn.rawgit.com/jaredreich/notie.js/a9e4afbeea979c0e6ee50aaf5cb4ee80e65d225d/notie.js
+// @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
 (async function () {
@@ -43,7 +44,9 @@
         return `${E(username)}さんのレートが${color[nowRate]}色に変わりました！<br>`;
     }).join("");
 
-    notie.alert(3, string, 20); //20秒後、またはクリックで消える
+    if (string.length > 0) {
+        notie.alert(3, string, 20); //20秒後、またはクリックで消える
+    }
 })();
 
 //Rateを色に変換する
@@ -63,7 +66,7 @@ function getLatestContestScreenName() {
     //agcXXX
     contestScreenName = contestScreenName.split('/').pop();
 
-    return ContestScreenName;
+    return contestScreenName;
 }
 
 async function getContestResultData(contestScreenName) {
