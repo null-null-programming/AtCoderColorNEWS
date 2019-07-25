@@ -1,14 +1,17 @@
 // ==UserScript==
-// @name         Atcoder__
-// @namespace    http://tampermonkey.net/
+// @name         AtcoderColorNEWS
+// @namespace    https://github.com/null-null-programming
 // @version      0.1
-// @author       nullnull
-// @match        https://atcoder.jp
+// @author       null_null
+// @match        https://atcoder.jp/*
 // @require      https://cdn.rawgit.com/jaredreich/notie.js/a9e4afbeea979c0e6ee50aaf5cb4ee80e65d225d/notie.js
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
 (async function () {
+    //既に通知したかどうかをcookieで判定する。imformedFlagがtrueのときのみ通知する。
+    if (imformedFlag() === false) return;
+
     //お気に入りリストを取得
     let favList = JSON.parse(localStorage.fav);
 
@@ -47,25 +50,49 @@
     if (string.length > 0) {
         notie.alert(3, string, 20); //20秒後、またはクリックで消える
     }
+
+    //cookieを１ヶ月保存する。今回のコンテスト名で上書きする。
+    document.cookie = 'preContest=' + getLatestContestScreenName() + ',max-age=60*60*24*30';
 })();
+
+function imformedFlag() {
+    //cookieが存在するか？ 存在しない場合は今回が初使用なので通知する。
+    if (document.cookie.indexOf("preContest=") >= 0) {
+        //cookie_name:preContestを取得する
+        let cookieName = document.cookie.split(';');
+        //各々のcookiezを取り出す
+        cookieName.forEach(function (value) {
+            //cookie名と値に分ける
+            let cookie_content = value.split('=');
+
+            if (cookie_content[0] === ' preContest') {
+                //保存されているクッキーの名前を取得
+                let cookieContestName = cookie_content[1].split(',');
+                //cookieに保存されているコンテスト名と直近のコンテスト名が同じ場合は通知済み
+                if (cookieContestName[0] === getLatestContestScreenName()) {
+                    imformedFlag = false;
+                    return; //通知済み
+                }
+
+            }
+        })
+    }
+}
 
 //Rateを色に変換する
 function getColorIndex(rate) {
     return Math.min(8, Math.floor(rate / 400));
 }
 
+//TODO:改良する。
+//直近のコンテスト名を取得する。
 function getLatestContestScreenName() {
-    //HTMLの構造が変わったらバグりそう。
-
     //<a href="/contests/agcXXX">AtCoder Grand Contest XXX</a>
     let contestScreenName = document.getElementById("collapse-contest").getElementsByClassName("table table-default table-striped table-hover table-condensed small")[2].getElementsByTagName('small')[1].innerHTML;
-
     //contests/agcXXX
     contestScreenName = contestScreenName.split('"')[1];
-
     //agcXXX
     contestScreenName = contestScreenName.split('/').pop();
-
     return contestScreenName;
 }
 
