@@ -47,13 +47,23 @@
 })();
 
 //Rateを色に変換する
-function getColorIndex(rate){
+function getColorIndex(rate) {
     return Math.min(8, Math.floor(rate / 400));
 }
 
 function getLatestContestScreenName() {
-    //TODO:URLのabc123みたいな奴をとってくる
-    return "agc036";
+    //HTMLの構造が変わったらバグりそう。
+
+    //<a href="/contests/agcXXX">AtCoder Grand Contest XXX</a>
+    let contestScreenName = document.getElementById("collapse-contest").getElementsByClassName("table table-default table-striped table-hover table-condensed small")[2].getElementsByTagName('small')[1].innerHTML;
+
+    //contests/agcXXX
+    contestScreenName = contestScreenName.split('"')[1];
+
+    //agcXXX
+    contestScreenName = contestScreenName.split('/').pop();
+
+    return ContestScreenName;
 }
 
 async function getContestResultData(contestScreenName) {
