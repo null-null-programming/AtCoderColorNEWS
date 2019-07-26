@@ -19,7 +19,8 @@
     let color = ['灰', '茶', '緑', '水', '青', '黄', '橙', '赤', '自由'];
 
     //直近のコンテスト
-    const latestContestScreenName = getLatestContestScreenName();
+    const latestContestScreenName = await getLatestContestScreenName();
+
     //直近コンテストの結果一覧
     const latestContestResult = await getContestResultData(latestContestScreenName);
 
@@ -87,13 +88,11 @@ function getColorIndex(rate) {
 
 //TODO:改良する。
 //直近のコンテスト名を取得する。
-function getLatestContestScreenName() {
-    //<a href="/contests/agcXXX">AtCoder Grand Contest XXX</a>
-    let contestScreenName = document.getElementById("collapse-contest").getElementsByClassName("table table-default table-striped table-hover table-condensed small")[2].getElementsByTagName('small')[1].innerHTML;
-    //contests/agcXXX
-    contestScreenName = contestScreenName.split('"')[1];
-    //agcXXX
-    contestScreenName = contestScreenName.split('/').pop();
+async function getLatestContestScreenName() {
+    let parser = new DOMParser();
+    let archiveDom = parser.parseFromString((await $.get("https://atcoder.jp/contests/archive")), "text/html");
+    let contestScreenName = archiveDom.querySelector("#main-container > div.row > div.col-lg-9.col-md-8 > div.panel.panel-default > div > table > tbody > tr:nth-child(1) > td:nth-child(2) > a");
+    contestScreenName = contestScreenName.toString().split('/').pop();
     return contestScreenName;
 }
 
