@@ -9,17 +9,17 @@
 // ==/UserScript==
 
 (async function () {
-    //既に通知したかどうかをcookieで判定する。imformedFlagがtrueのときのみ通知する。
-    if (imformedFlag() === false) return;
+    //直近のコンテスト
+    const latestContestScreenName = await getLatestContestScreenName();
+
+    //既に通知したかどうかをlocalStorageで判定する。imformedFlagがtrueのときのみ通知する。
+    if (imformedFlag(latestContestScreenName) === false) return;
 
     //お気に入りリストを取得
     let favList = JSON.parse(localStorage.fav);
 
     //レートを色に変換するリスト
     let color = ['灰', '茶', '緑', '水', '青', '黄', '橙', '赤', '自由'];
-
-    //直近のコンテスト
-    const latestContestScreenName = await getLatestContestScreenName();
 
     //直近コンテストの結果一覧
     const latestContestResult = await getContestResultData(latestContestScreenName);
@@ -52,33 +52,14 @@
         notie.alert(3, string, 20); //20秒後、またはクリックで消える
     }
 
-    //cookieを１ヶ月保存する。今回のコンテスト名で上書きする。
-    document.cookie = 'preContest=' + getLatestContestScreenName() + ',max-age=60*60*24*30';
+    //localStorageに通知したコンテスト名を保存する。
+    localStorage.setItem('keyContestName', latestContestScreenName);
 })();
 
-function imformedFlag() {
-    //cookieが存在するか？ 存在しない場合は今回が初使用なので通知する。
-    let res = true;
-    if (document.cookie.indexOf("preContest=") >= 0) {
-        //cookie_name:preContestを取得する
-        let cookieName = document.cookie.split(';');
-        //各々のcookiezを取り出す
-        cookieName.forEach(function (value) {
-            //cookie名と値に分ける
-            let cookie_content = value.split('=');
-
-            if (cookie_content[0] === ' preContest') {
-                //保存されているクッキーの名前を取得
-                let cookieContestName = cookie_content[1].split(',');
-                //cookieに保存されているコンテスト名と直近のコンテスト名が同じ場合は通知済み
-                if (cookieContestName[0] === getLatestContestScreenName()) {
-                    res = false;
-                    return;
-                }
-            }
-        })
-    }
-    return res;
+//通知済みかどうかを調べる
+function imformedFlag(latestContestScreenName) {
+    if (localStorage.getItem('keyContestName') !== latestContestScreenName) return true;
+    return false;
 }
 
 //Rateを色に変換する
@@ -86,7 +67,6 @@ function getColorIndex(rate) {
     return Math.min(8, Math.floor(rate / 400));
 }
 
-//TODO:改良する。
 //直近のコンテスト名を取得する。
 async function getLatestContestScreenName() {
     let parser = new DOMParser();
