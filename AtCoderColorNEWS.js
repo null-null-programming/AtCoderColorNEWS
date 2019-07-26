@@ -51,7 +51,7 @@
     }).join("");
 
     if (string.length > 0) {
-        notie.alert(3, string, 20); //20秒後、またはクリックで消える
+        window.alert(string); //20秒後、またはクリックで消える
     }
 
     //localStorageに通知したコンテスト名を保存する。
