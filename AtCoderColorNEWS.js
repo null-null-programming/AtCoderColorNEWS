@@ -6,7 +6,6 @@
 // @author       null_null
 // @license      MIT
 // @match        https://atcoder.jp/*
-// @require      https://cdn.rawgit.com/jaredreich/notie.js/a9e4afbeea979c0e6ee50aaf5cb4ee80e65d225d/notie.js
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // ==/UserScript==
 
@@ -47,7 +46,7 @@
         if (preRate >= nowRate) return "";
 
         //繋げる文字列を返す
-        return `${E(username)}さんのレートが${color[nowRate]}色に変わりました！<br>`;
+        return `${E(username)}さんのレートが${color[nowRate]}色に変わりました！\n`;
     }).join("");
 
     if (string.length > 0) {
